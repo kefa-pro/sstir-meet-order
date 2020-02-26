@@ -1,27 +1,27 @@
 <template>
-  <div id="app">
-    <div class="layout-main-wrapper">
-      <page-header />
-      <div style="background: #fff; height: 20px; width: 100%;" />
-      <div class="main-content-wrapper">
-        <div class="router-container">
-          <router-view />
-        </div>
+  <div class="layout-main-wrapper">
+    <page-header />
+    <div class="main-content-wrapper">
+      <breadcrumb />
+      <div class="router-container">
+        <router-view />
       </div>
-      <page-footer />
     </div>
+    <page-footer />
   </div>
 </template>
 
 <script>
 import PageHeader from "@/components/page-header";
+import Breadcrumb from "@/components/breadcrumb";
 import PageFooter from "@/components/page-footer";
 
 export default {
-  name: "App",
+  name: "LayoutList",
 
   components: {
     PageHeader,
+    Breadcrumb,
     PageFooter
   },
 
@@ -46,8 +46,6 @@ export default {
 
     .router-container {
       padding-top: 15px;
-      min-height: calc(100vh - 240px);
-      box-sizing: border-box;
     }
   }
 }
