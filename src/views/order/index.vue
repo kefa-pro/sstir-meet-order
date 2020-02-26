@@ -78,13 +78,14 @@
 </template>
 
 <script>
-import { queryMeetRoom, saveMeetOrder } from "@/service";
+import { queryMeetRoom, saveMeetOrder, checkLogin } from "@/service";
 
 export default {
   name: "MeetOrder",
 
   data() {
     return {
+      loginName: '',
       orderInfo: {
         name: "",
         company: "",
@@ -108,6 +109,16 @@ export default {
   methods: {
     async initData() {
       try {
+        const {logFlag, logName} = await checkLogin()
+        if (logFlag) {
+          this.loginName = logName
+          this.orderInfo.name = logName
+        } else {
+          this.$message.error('请先登录SSTIR官网!')
+          setTimeout(() => {
+            window.location.href="http://www.sstir.cn"
+          }, 1000);
+        }
         const res = await queryMeetRoom();
         this.meetingOpt = res;
       } catch (err) {

@@ -1,4 +1,4 @@
-import { AppGet, AppPost } from "@/utils/request";
+import { AppGet, AppPost, AppFetchJsonp } from "@/utils/request";
 
 export function queryMeetRoom() {
   return AppGet("/meet/queryroom");
@@ -14,4 +14,8 @@ export function queryOrderList() {
 
 export function agreeMeetOrder(data) {
   return AppPost('/meet/agree', data)
+}
+
+export function checkLogin() {
+  return AppFetchJsonp('http://www.sstir.cn/logCheck_sgst.jsp')
 }

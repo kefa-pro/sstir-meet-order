@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import QrCode from "./img/erweima.jpg";
+import QrCode from "./img/qrcode.png";
 
 export default {
   name: "PageFooter",
