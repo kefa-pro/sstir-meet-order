@@ -6,7 +6,7 @@ const getBaseUrl = env => {
     // development
     case "dev":
       return {
-        baseUrl: "http://101.132.40.63:8081/"
+        baseUrl: "http://192.168.2.119:10000/"
       };
     // production
     case "prod":

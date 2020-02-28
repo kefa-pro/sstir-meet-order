@@ -1,5 +1,6 @@
 import instance from './axios';
 import fetchJsonp from 'fetch-jsonp';
+import config from '@/config';
 
 export function AppPost(url, data) {
 	return new Promise((resolve, reject) => {
@@ -37,12 +38,21 @@ export function AppGet(url, data) {
 
 export function AppFetchJsonp(url) {
 	return new Promise((resolve, reject) => {
-    fetchJsonp(url)
-		.then(function(response) {
-      resolve(response.json())
-		})
-		.catch(function(ex) {
-			reject(ex)
-		});
-  })
+		fetchJsonp(url.startsWith('http') ? url : config.baseUrl + url)
+			.then(async function(response) {
+				if (!url.startsWith('http')) {
+					const { code, msg, data } = await response.json()
+					if (code === 200) {
+						resolve(data)
+					} else {
+						reject(msg)
+					}
+				} else {
+					resolve(response.json());
+				}
+			})
+			.catch(function(ex) {
+				reject(ex);
+			});
+	});
 }
