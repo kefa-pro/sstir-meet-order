@@ -128,7 +128,7 @@ export default {
 					} else {
 						try {
 							await saveMeetOrder(this.orderInfo);
-							this.$message.success('预约成功，稍后会有工作人员联系您！');
+							this.$message.success('预约成功，稍后您会收到会议地址的短信，请注意查收！');
 							this.$refs.form.resetFields();
 							this.orderInfo.meet = null;
 						} catch (err) {

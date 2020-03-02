@@ -3,13 +3,13 @@
 		<el-tabs v-model="activeName">
 			<el-tab-pane label="预约管理" name="order">
 				<el-table :data="tblOrderData">
-					<el-table-column prop="name" label="姓名" fixed />
-					<el-table-column prop="company" label="单位" />
+					<el-table-column prop="mame" label="姓名" fixed />
+					<el-table-column prop="company" label="单位" width="180" />
 					<el-table-column prop="mobile" label="电话" width="120" />
-					<el-table-column prop="email" label="邮箱" width="120" />
+					<el-table-column prop="email" label="邮箱" width="180" />
 					<el-table-column prop="meetCode" label="会议编号" />
 					<el-table-column label="会议时间" width="300" headerAlign="center">
-						<template slot-scope="scope"> {{ scope.row.start }} ~ {{ scope.row.end }} </template>
+						<template slot-scope="scope"> {{ scope.row.start_time }} ~ {{ scope.row.end_time }} </template>
 					</el-table-column>
 					<el-table-column label="预约状态">
 						<template slot-scope="scope">
@@ -109,6 +109,7 @@ export default {
 		async initData() {
 			const res = await queryOrderList();
 			this.tblOrderData = res;
+			console.log(this.tblOrderData)
 
 			const resRoom = await queryMeetRoom();
 			this.tblRoomData = resRoom;
