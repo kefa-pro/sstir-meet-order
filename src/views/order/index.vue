@@ -31,9 +31,9 @@
 						<el-select v-model="orderInfo.meet" placeholder="请选择会议时间" style="width: 400px;">
 							<el-option
 								v-for="item in meetingOpt"
-								:key="item.meetCode"
+								:key="item.id"
 								:label="`${item.startTime} ~ ${item.endTime}`"
-								:value="item.meetCode"
+								:value="item.id"
 								:disabled="!!item.isOrder"
 							/>
 						</el-select>
