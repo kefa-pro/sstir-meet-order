@@ -1,74 +1,95 @@
 <template>
 	<div class="order-wrapper">
-		<el-card class="box-card">
-			<div slot="header" class="title">
-				<h1>科云会议预约信息登记</h1>
-			</div>
-			<div class="form-wrapper">
-				<el-form :model="orderInfo" :rules="rules" ref="form" label-width="100px">
-					<el-form-item label="姓名:">
-						<el-input v-model="orderInfo.name" placeholder="请留下您的真实姓名" style="width: 400px;" />
-					</el-form-item>
-					<el-form-item label="单位:">
-						<el-input v-model="orderInfo.company" placeholder="请留下您的工作单位" style="width: 400px;" />
-					</el-form-item>
-					<el-form-item label="手机:">
-						<el-input
-							v-model="orderInfo.mobile"
-							placeholder="请填写真实手机号码，便于发送会议地址"
-							style="width: 400px;"
-							disabled
-						/>
-					</el-form-item>
-					<el-form-item label="邮箱:">
-						<el-input
-							v-model="orderInfo.email"
-							placeholder="请填写真实邮箱，便于发送会议地址"
-							style="width: 400px;"
-						/>
-					</el-form-item>
-					<el-form-item label="会议时间:" prop="meet">
-						<el-select v-model="orderInfo.meet" placeholder="请选择会议时间" style="width: 400px;">
-							<el-option
-								v-for="item in meetingOpt"
-								:key="item.id"
-								:label="`${item.startTime} ~ ${item.endTime}`"
-								:value="item.id"
-								:disabled="!!item.isOrder"
-							/>
-						</el-select>
-					</el-form-item>
-				</el-form>
-			</div>
-			<div class="btn">
-				<el-button type="primary" @click="onSubmit">提交</el-button>
-			</div>
-		</el-card>
-
-		<!-- <div class="desc">
-      <div class="desc-title">
-        使用说明:
-      </div>
-      <div class="desc-content">
-        <p>
-          1. 请填写真实的个人信息，手机和邮箱至少填写一个，以便我们发送会议地址。
-        </p>
-        <p>
-          2. 灰色不可选择的时间段表示该时段会议室已约满，敬请谅解。
-        </p>
-      </div>
-    </div> -->
+		<el-tabs v-model="activeName">
+			<el-tab-pane label="会议预约" name="order">
+				<el-card class="box-card">
+					<div slot="header" class="title">
+						<h1>科云会议预约信息登记</h1>
+					</div>
+					<div class="form-wrapper">
+						<el-form :model="orderInfo" :rules="rules" ref="form" label-width="100px">
+							<el-form-item label="姓名:">
+								<el-input
+									v-model="orderInfo.name"
+									placeholder="请留下您的真实姓名"
+									style="width: 400px;"
+								/>
+							</el-form-item>
+							<el-form-item label="单位:">
+								<el-input
+									v-model="orderInfo.company"
+									placeholder="请留下您的工作单位"
+									style="width: 400px;"
+								/>
+							</el-form-item>
+							<el-form-item label="手机:">
+								<el-input
+									v-model="orderInfo.mobile"
+									placeholder="请填写真实手机号码，便于发送会议地址"
+									style="width: 400px;"
+									disabled
+								/>
+							</el-form-item>
+							<el-form-item label="邮箱:">
+								<el-input
+									v-model="orderInfo.email"
+									placeholder="请填写真实邮箱，便于发送会议地址"
+									style="width: 400px;"
+								/>
+							</el-form-item>
+							<el-form-item label="会议时间:" prop="meet">
+								<el-select v-model="orderInfo.meet" placeholder="请选择会议时间" style="width: 400px;">
+									<el-option
+										v-for="item in meetingOpt"
+										:key="item.id"
+										:label="`${item.startTime} ~ ${item.endTime}`"
+										:value="item.id"
+										:disabled="!!item.isOrder"
+									/>
+								</el-select>
+							</el-form-item>
+						</el-form>
+					</div>
+					<div class="btn">
+						<el-button type="primary" @click="onSubmit">提交</el-button>
+					</div>
+				</el-card>
+			</el-tab-pane>
+			<el-tab-pane label="我的预约" name="my">
+				<el-table :data="orderList">
+					<el-table-column prop="mame" label="姓名" fixed />
+					<el-table-column prop="company" label="单位" width="180" />
+					<el-table-column prop="mobile" label="电话" width="120" />
+					<el-table-column prop="email" label="邮箱" width="180" />
+					<el-table-column prop="meetCode" label="会议编号" />
+					<el-table-column label="会议时间" width="300" headerAlign="center">
+						<template slot-scope="scope"> {{ scope.row.start_time }} ~ {{ scope.row.end_time }} </template>
+					</el-table-column>
+					<el-table-column label="预约状态">
+						<template slot-scope="scope">
+							{{ scope.row.orderStatus ? '预约成功' : '预约中' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="url" label="Url" width="500">
+						<template slot-scope="scope">
+							<a target="_blank" :href="scope.row.url">会议地址</a>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-tab-pane>
+		</el-tabs>
 	</div>
 </template>
 
 <script>
-import { queryMeetRoom, saveMeetOrder, checkLogin, getUserInfoByLogName } from '@/service';
+import { queryMeetRoom, saveMeetOrder, checkLogin, getUserInfoByLogName, getMyOrder } from '@/service';
 
 export default {
 	name: 'MeetOrder',
 
 	data() {
 		return {
+			activeName: 'order',
 			loginName: '',
 			orderInfo: {
 				userId: '',
@@ -82,6 +103,7 @@ export default {
 				meet: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
 			},
 			meetingOpt: [],
+			orderList: [],
 		};
 	},
 
@@ -96,9 +118,9 @@ export default {
 			try {
 				const { logFlag, logName } = await checkLogin();
 				if (logFlag) {
-          this.loginName = logName;
-          
-          const { userId, name, company, mobile, email } = await getUserInfoByLogName(logName);
+					this.loginName = logName;
+
+					const { userId, name, company, mobile, email } = await getUserInfoByLogName(logName);
 					this.orderInfo = {
 						userId,
 						name,
@@ -106,9 +128,15 @@ export default {
 						mobile,
 						email,
 						meet: this.orderInfo.meet,
-          };
-          
-          this.meetingOpt = await queryMeetRoom()
+					};
+
+					this.meetingOpt = await queryMeetRoom();
+
+					const myOrder = await getMyOrder(userId);
+					console.log(myOrder);
+					if (myOrder) {
+						this.orderList = myOrder;
+					}
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
 					setTimeout(() => {
@@ -128,9 +156,11 @@ export default {
 					} else {
 						try {
 							await saveMeetOrder(this.orderInfo);
-							this.$message.success('预约成功，稍后您会收到会议地址的短信，请注意查收！');
+							this.$message.success('预约成功!');
 							this.$refs.form.resetFields();
 							this.orderInfo.meet = null;
+							await this.initData()
+							this.activeName = 'my'
 						} catch (err) {
 							this.$message.error('预约失败，请刷新页面重试！');
 						}

@@ -35,3 +35,7 @@ export function saveMeetRoom(data) {
 export function delMeetRoom(id) {
   return AppFetchJsonp(`/meet!deleteMeetRoom.do?id=${id}`)
 }
+
+export function getMyOrder(id) {
+  return AppFetchJsonp(`/meet!getOrderInfoByUserId.do?userId=${id}`)
+}
