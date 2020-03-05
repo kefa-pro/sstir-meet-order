@@ -1,7 +1,6 @@
 <template>
   <div class="layout-main-wrapper">
     <page-header />
-    <div style="background: #fff; height: 20px; width: 100%;" />
     <page-tab />
     <div class="main-content-wrapper">
       <div class="router-container">

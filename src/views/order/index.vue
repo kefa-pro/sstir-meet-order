@@ -57,7 +57,13 @@
 			</el-tab-pane>
 			<el-tab-pane label="我的预约" name="my">
 				<el-table :data="orderList">
-					<el-table-column prop="meetCode" label="会议编号" width="200" header-align="center" align="center" />
+					<el-table-column
+						prop="meetCode"
+						label="会议编号"
+						width="200"
+						header-align="center"
+						align="center"
+					/>
 					<el-table-column label="会议时间" headerAlign="center" align="center">
 						<template slot-scope="scope"> {{ scope.row.start_time }} ~ {{ scope.row.end_time }} </template>
 					</el-table-column>
@@ -68,7 +74,7 @@
 					</el-table-column>
 					<el-table-column label="预约日期" header-align="center" align="center">
 						<template slot-scope="scope">
-							{{getTime(scope.row.createTime)}}
+							{{ getTime(scope.row.createTime) }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -155,8 +161,8 @@ export default {
 							this.$message.success('预约成功!');
 							this.$refs.form.resetFields();
 							this.orderInfo.meet = null;
-							await this.initData()
-							this.activeName = 'my'
+							await this.initData();
+							this.activeName = 'my';
 						} catch (err) {
 							this.$message.error(err);
 						}
@@ -166,15 +172,20 @@ export default {
 		},
 
 		getTime(val) {
-			const time = new Date(val)
-			return `${time.getFullYear()}-${(time.getMonth() + 1 + '').padStart(2, '0')}-${(time.getDate() + '').padStart(2, '0')}`
-		}
+			const time = new Date(val);
+			return `${time.getFullYear()}-${(time.getMonth() + 1 + '').padStart(2, '0')}-${(
+				time.getDate() + ''
+			).padStart(2, '0')}`;
+		},
 	},
 };
 </script>
 
 <style lang="less" scoped>
 .order-wrapper {
+	/deep/.el-card__body {
+		padding: 10px !important;
+	}
 	.title {
 		display: flex;
 		justify-content: center;
@@ -191,7 +202,6 @@ export default {
 	}
 
 	.btn {
-		padding: 10px 0;
 		text-align: center;
 	}
 
