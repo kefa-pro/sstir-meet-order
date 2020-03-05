@@ -57,22 +57,18 @@
 			</el-tab-pane>
 			<el-tab-pane label="我的预约" name="my">
 				<el-table :data="orderList">
-					<el-table-column prop="mame" label="姓名" fixed />
-					<el-table-column prop="company" label="单位" width="180" />
-					<el-table-column prop="mobile" label="电话" width="120" />
-					<el-table-column prop="email" label="邮箱" width="180" />
-					<el-table-column prop="meetCode" label="会议编号" />
-					<el-table-column label="会议时间" width="300" headerAlign="center">
+					<el-table-column prop="meetCode" label="会议编号" width="200" header-align="center" align="center" />
+					<el-table-column label="会议时间" headerAlign="center" align="center">
 						<template slot-scope="scope"> {{ scope.row.start_time }} ~ {{ scope.row.end_time }} </template>
 					</el-table-column>
-					<el-table-column label="预约状态">
-						<template slot-scope="scope">
-							{{ scope.row.orderStatus ? '预约成功' : '预约中' }}
-						</template>
-					</el-table-column>
-					<el-table-column prop="url" label="Url" width="500">
+					<el-table-column prop="url" label="会议地址" width="200" header-align="center" align="center">
 						<template slot-scope="scope">
 							<a target="_blank" :href="scope.row.url">会议地址</a>
+						</template>
+					</el-table-column>
+					<el-table-column label="预约日期" header-align="center" align="center">
+						<template slot-scope="scope">
+							{{getTime(scope.row.createTime)}}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -162,12 +158,17 @@ export default {
 							await this.initData()
 							this.activeName = 'my'
 						} catch (err) {
-							this.$message.error('预约失败，请刷新页面重试！');
+							this.$message.error(err);
 						}
 					}
 				}
 			});
 		},
+
+		getTime(val) {
+			const time = new Date(val)
+			return `${time.getFullYear()}-${(time.getMonth() + 1 + '').padStart(2, '0')}-${(time.getDate() + '').padStart(2, '0')}`
+		}
 	},
 };
 </script>
