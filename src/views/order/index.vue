@@ -37,15 +37,24 @@
 									style="width: 400px;"
 								/>
 							</el-form-item>
-							<el-form-item label="会议时间:" prop="meet">
-								<el-select v-model="orderInfo.meet" placeholder="请选择会议时间" style="width: 400px;">
+							<el-form-item label="会议时间:" prop="meetTime">
+								<el-date-picker
+									v-model="orderInfo.meetTime"
+									type="datetime"
+									placeholder="选择会议时间"
+									value-format="yyyy-MM-dd HH:mm:ss"
+									style="width: 400px;"
+								/>
+							</el-form-item>
+							<el-form-item label="参会方数:" prop="memberCnt">
+								<el-select v-model="orderInfo.memberCnt" placeholder="请选择" style="width: 400px;">
 									<el-option
-										v-for="item in meetingOpt"
-										:key="item.id"
-										:label="`${item.startTime} ~ ${item.endTime}`"
-										:value="item.id"
-										:disabled="!!item.isOrder"
-									/>
+										v-for="item in cntOpt"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value"
+									>
+									</el-option>
 								</el-select>
 							</el-form-item>
 						</el-form>
@@ -84,7 +93,7 @@
 </template>
 
 <script>
-import { queryMeetRoom, saveMeetOrder, checkLogin, getUserInfoByLogName, getMyOrder } from '@/service';
+import { saveMeetOrder, checkLogin, getResidueSquare } from '@/service';
 
 export default {
 	name: 'MeetOrder',
@@ -94,18 +103,18 @@ export default {
 			activeName: 'order',
 			loginName: '',
 			orderInfo: {
-				userId: '',
 				name: '',
 				company: '',
 				mobile: '',
 				email: '',
-				meet: null,
+				meetTime: '',
+				memberCnt: null,
 			},
 			rules: {
-				meet: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
+				meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
 			},
-			meetingOpt: [],
 			orderList: [],
+			cntOpt: [],
 		};
 	},
 
@@ -118,26 +127,21 @@ export default {
 	methods: {
 		async initData() {
 			try {
-				const { logFlag, logName } = await checkLogin();
-				if (logFlag) {
-					this.loginName = logName;
+				const userInfo = await checkLogin();
+				if (userInfo) {
+					const { trueName, mobile, company } = userInfo;
+					this.orderInfo.name = trueName;
+					console.log(company, trueName, mobile);
+					this.orderInfo.company = decodeURI(unescape(company));
+					// this.orderInfo.company = decodeURI(decodeURI(company))
+					this.orderInfo.mobile = mobile;
 
-					const { userId, name, company, mobile, email } = await getUserInfoByLogName(logName);
-					this.orderInfo = {
-						userId,
-						name,
-						company,
-						mobile,
-						email,
-						meet: this.orderInfo.meet,
-					};
-
-					this.meetingOpt = await queryMeetRoom();
-
-					const myOrder = await getMyOrder(userId);
-					console.log(myOrder);
-					if (myOrder) {
-						this.orderList = myOrder;
+					const { residueSquares } = await getResidueSquare();
+					for (let i = 2; i <= residueSquares; i++) {
+						this.cntOpt.push({
+							value: i,
+							label: `${i}位`,
+						});
 					}
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
@@ -145,8 +149,32 @@ export default {
 						window.location.href = 'http://www.sstir.cn';
 					}, 1000);
 				}
+				// if (logFlag) {
+				// 	this.loginName = logName;
+
+				// 	const { userId, name, company, mobile, email } = await getUserInfoByLogName(logName);
+				// 	this.orderInfo = {
+				// 		userId,
+				// 		name,
+				// 		company,
+				// 		mobile,
+				// 		email,
+				// 		meet: this.orderInfo.meet,
+				// 	};
+
+				// 	const myOrder = await getMyOrder(userId);
+				// 	console.log(myOrder);
+				// 	if (myOrder) {
+				// 		this.orderList = myOrder;
+				// 	}
+				// } else {
+				// 	this.$message.error('请先登录SSTIR官网!');
+				// 	setTimeout(() => {
+				// 		window.location.href = 'http://www.sstir.cn';
+				// 	}, 1000);
+				// }
 			} catch (err) {
-				this.$message.error('获取会议室时间段失败，请重试！');
+				this.$message.error(err);
 			}
 		},
 

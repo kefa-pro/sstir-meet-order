@@ -6,21 +6,21 @@ const getBaseUrl = env => {
     // development
     case "dev":
       return {
-        baseUrl: "http://www.sstir.cn/"
+        baseUrl: "http://192.168.2.3:30000/vedio/"
       };
     // production
     case "prod":
       return {
-        baseUrl: "http://www.sstir.cn/"
+        baseUrl: "http://192.168.2.3:30000/vedio/"
       };
     case "qa":
       return {
-        baseUrl: "http://10.11.0.70:6999"
+        baseUrl: "http://192.168.2.3:30000/vedio/"
       };
     // default: dev
     default:
       return {
-        baseUrl: "http://101.132.40.63:8081/"
+        baseUrl: "http://192.168.2.3:30000/vedio/"
       };
   }
 };

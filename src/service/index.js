@@ -1,4 +1,4 @@
-import { AppPost, AppFetchJsonp } from "@/utils/request";
+import { AppPost, AppGet, AppFetchJsonp } from "@/utils/request";
 
 export function queryMeetRoom() {
   return AppFetchJsonp("/meet!getMeetTime.do");
@@ -18,18 +18,8 @@ export function agreeMeetOrder(data) {
   return AppPost('/meet/agree', data)
 }
 
-export function checkLogin() {
-  return AppFetchJsonp('http://www.sstir.cn/logCheck_sgst.jsp')
-}
-
 export function getUserInfoByLogName(name) {
   return AppFetchJsonp(`/meet!getUserInfo.do?logName=${name}`)
-}
-
-export function saveMeetRoom(data) {
-  const { meetCode, startTime, endTime, id} = data
-  const url = `/meet!updateOrCreateMeetRoom.do?meetCode=${meetCode}&startTime=${startTime}&endTime=${endTime}&id=${id}`
-  return AppFetchJsonp(url)
 }
 
 export function delMeetRoom(id) {
@@ -38,4 +28,19 @@ export function delMeetRoom(id) {
 
 export function getMyOrder(id) {
   return AppFetchJsonp(`/meet!getOrderInfoByUserId.do?userId=${id}`)
+}
+
+// 判断登录
+export function checkLogin() {
+  return AppPost('/judgeAndGetUserInfo')
+}
+
+// 获取剩余方数
+export function getResidueSquare() {
+  return AppGet('/residueSquares')
+}
+
+// 创建会议
+export function saveMeetRoom(data) {
+  AppPost('/createMeeting', data)
 }

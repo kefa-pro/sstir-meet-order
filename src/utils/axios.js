@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Loading, Message } from "element-ui";
+import Cookies from 'js-cookie'
 
 import appConfig from "@/config";
 // create axios instance
@@ -25,6 +26,11 @@ instance.interceptors.request.use(
       spinner: "el-icon-loading",
       background: "rgba(0, 0, 0, 0.7)"
     });
+
+    const userToken = Cookies.get('token')
+    if (userToken) {
+      config.headers['Authorization'] = userToken
+    }
 
     return config;
   },

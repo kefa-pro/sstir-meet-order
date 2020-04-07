@@ -9,10 +9,10 @@ export function AppPost(url, data) {
 		instance
 			.post(url, data)
 			.then(res => {
-				if (res.data.success) {
-					resolve(res.data.data);
+				if(res.data.code === 200) {
+					resolve(res.data.data)
 				} else {
-					reject(res.data.message);
+					reject(res.data.msg)
 				}
 			})
 			.catch(err => {
@@ -30,7 +30,7 @@ export function AppGet(url, data) {
 				},
 			})
 			.then(res => {
-				resolve(res.data.data);
+				resolve((res.data && res.data.data) || res.data);
 			})
 			.catch(err => {
 				reject(err);
@@ -47,7 +47,7 @@ export function AppFetchJsonp(url) {
 	});
 	return new Promise((resolve, reject) => {
 		fetchJsonp(url.startsWith('http') ? url : config.baseUrl + url, {
-			timeout: 1000 * 20
+			timeout: 1000 * 20,
 		})
 			.then(async function(response) {
 				Loading.service().close();
