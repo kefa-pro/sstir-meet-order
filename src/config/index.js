@@ -6,21 +6,21 @@ const getBaseUrl = env => {
     // development
     case "dev":
       return {
-        baseUrl: "http://192.168.2.3:30000/vedio/"
+        baseUrl: "http://172.16.70.122:30000//vedio/"
       };
     // production
     case "prod":
       return {
-        baseUrl: "http://192.168.2.3:30000/vedio/"
+        baseUrl: "http://172.16.70.122:30000//vedio/"
       };
     case "qa":
       return {
-        baseUrl: "http://192.168.2.3:30000/vedio/"
+        baseUrl: "http://172.16.70.122:30000//vedio/"
       };
     // default: dev
     default:
       return {
-        baseUrl: "http://192.168.2.3:30000/vedio/"
+        baseUrl: "http://172.16.70.122:30000//vedio/"
       };
   }
 };

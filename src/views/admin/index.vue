@@ -1,6 +1,6 @@
 <template>
 	<div class="admin-wrapper">
-		<el-tabs v-model="activeName">
+		<!-- <el-tabs v-model="activeName">
 			<el-tab-pane label="预约管理" name="order">
 				<el-table :data="tblOrderData">
 					<el-table-column prop="mame" label="姓名" fixed />
@@ -74,30 +74,40 @@
 				<el-button @click="onRoomCancelClick">取 消</el-button>
 				<el-button type="primary" @click="onRoomSaveClick">确 定</el-button>
 			</span>
-		</el-dialog>
+		</el-dialog> -->
+		<el-table :data="tblOrderData">
+			<el-table-column prop="pUserName" label="姓名" fixed />
+			<el-table-column prop="company" label="单位" width="180" />
+			<el-table-column prop="mobile" label="电话" width="120" />
+			<el-table-column prop="email" label="邮箱" width="180" />
+			<el-table-column prop="confId" label="会议编号" />
+			<el-table-column prop="startTime" label="会议时间" width="300" headerAlign="center" />
+			<el-table-column prop="duration" label="会议时长" headerAlign="center" />
+			<el-table-column prop="confUrl" label="Url" width="500" />
+		</el-table>
 	</div>
 </template>
 
 <script>
-import { queryOrderList, agreeMeetOrder, queryMeetRoom, saveMeetRoom, delMeetRoom } from '@/service';
+import { queryOrderList } from '@/service';
 export default {
 	name: 'AdminPage',
 
 	data() {
 		return {
-			activeName: 'order',
+			// activeName: 'order',
 			tblOrderData: [],
-			tblRoomData: [],
-			showRoomEdit: false,
-			currentRoomInfo: {
-				id: '',
-				meetCode: '',
-				meetTime: [],
-			},
-			rules: {
-				meetCode: [{ required: true, message: '请输入会议编号', trigger: 'blur' }],
-				meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
-			},
+			// tblRoomData: [],
+			// showRoomEdit: false,
+			// currentRoomInfo: {
+			// 	id: '',
+			// 	meetCode: '',
+			// 	meetTime: [],
+			// },
+			// rules: {
+			// 	meetCode: [{ required: true, message: '请输入会议编号', trigger: 'blur' }],
+			// 	meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
+			// },
 		};
 	},
 
@@ -109,98 +119,7 @@ export default {
 		async initData() {
 			const res = await queryOrderList();
 			this.tblOrderData = res;
-			console.log(this.tblOrderData)
-
-			const resRoom = await queryMeetRoom();
-			this.tblRoomData = resRoom;
-		},
-
-		onAgreeClick(id, meet) {
-			this.$confirm('是否确认批准该用户的预约？', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning',
-			}).then(async () => {
-				try {
-					await agreeMeetOrder({
-						id,
-						meet,
-					});
-					this.$message.success('审批通过');
-					this.initData();
-				} catch (err) {
-					this.$message.error('审批失败，请重试');
-				}
-			});
-		},
-
-		onRoomAddClick() {
-      this.currentRoomInfo = {
-				id: '',
-				meetCode: '',
-				meetTime: [],
-			}
-			this.showRoomEdit = true;
-		},
-
-		onRoomCancelClick() {
-			this.showRoomEdit = false;
-			this.$refs.refForm.resetFields();
-		},
-
-		onRoomSaveClick() {
-			this.$refs.refForm.validate(async valid => {
-				if (valid) {
-					const { id, meetCode, meetTime } = this.currentRoomInfo;
-					const postData = {
-						id: id,
-						meetCode,
-						startTime: meetTime[0],
-						endTime: meetTime[1],
-					};
-					try {
-						await saveMeetRoom(postData);
-						this.$message.success('保存成功！');
-						this.showRoomEdit = false;
-						this.initData();
-					} catch (err) {
-						this.$message.error(err);
-					}
-				}
-			});
-		},
-
-		onDelClick(id) {
-			this.$confirm('是否确认删除?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning',
-			})
-				.then(async () => {
-          try {
-            await delMeetRoom(id)
-            this.$message.success('删除成功')
-            this.initData()
-          } catch (err) {
-            this.$message.error(err)
-          }
-				})
-				.catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除',
-					});
-				});
-		},
-
-		onEditClick(row) {
-      this.currentRoomInfo = {
-				id: row.id,
-				meetCode: row.meetCode,
-				meetTime: [new Date(row.startTime) - 0, new Date(row.endTime) - 0],
-			}
-			this.showRoomEdit = true;
-		},
+		}
 	},
 };
 </script>

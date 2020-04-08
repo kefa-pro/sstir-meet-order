@@ -7,7 +7,7 @@
 						<h1>科云会议预约信息登记</h1>
 					</div>
 					<div class="form-wrapper">
-						<el-form :model="orderInfo" :rules="rules" ref="form" label-width="100px">
+						<el-form :model="orderInfo" :rules="rules" ref="form" label-width="120px">
 							<el-form-item label="姓名:">
 								<el-input
 									v-model="orderInfo.name"
@@ -37,7 +37,7 @@
 									style="width: 400px;"
 								/>
 							</el-form-item>
-							<el-form-item label="会议时间:" prop="meetTime">
+							<el-form-item label="会议开始时间:" prop="meetTime">
 								<el-date-picker
 									v-model="orderInfo.meetTime"
 									type="datetime"
@@ -46,8 +46,17 @@
 									style="width: 400px;"
 								/>
 							</el-form-item>
+							<el-form-item label="会议时长:" prop="duration">
+								<el-input-number
+									v-model="orderInfo.duration"
+									controls-position="right"
+									:min="1"
+									style="width: 200px;"
+								></el-input-number
+								>(分钟)
+							</el-form-item>
 							<el-form-item label="参会方数:" prop="memberCnt">
-								<el-select v-model="orderInfo.memberCnt" placeholder="请选择" style="width: 400px;">
+								<el-select v-model="orderInfo.memberCnt" placeholder="请选择" style="width: 200px;">
 									<el-option
 										v-for="item in cntOpt"
 										:key="item.value"
@@ -66,24 +75,17 @@
 			</el-tab-pane>
 			<el-tab-pane label="我的预约" name="my">
 				<el-table :data="orderList">
-					<el-table-column
-						prop="meetCode"
-						label="会议编号"
-						width="200"
-						header-align="center"
-						align="center"
-					/>
-					<el-table-column label="会议时间" headerAlign="center" align="center">
-						<template slot-scope="scope"> {{ scope.row.start_time }} ~ {{ scope.row.end_time }} </template>
-					</el-table-column>
+					<el-table-column prop="confId" label="会议编号" width="200" header-align="center" align="center" />
+					<el-table-column label="会议时间" headerAlign="center" align="center" prop="startTime" />
+					<el-table-column label="会议时长" headerAlign="center" align="center" prop="duration" />
 					<el-table-column prop="url" label="会议地址" width="200" header-align="center" align="center">
 						<template slot-scope="scope">
-							<a target="_blank" :href="scope.row.url">会议地址</a>
+							<a target="_blank" :href="scope.row.confUrl">会议地址</a>
 						</template>
 					</el-table-column>
 					<el-table-column label="预约日期" header-align="center" align="center">
 						<template slot-scope="scope">
-							{{ getTime(scope.row.createTime) }}
+							{{ getTime(scope.row.createDate) }}
 						</template>
 					</el-table-column>
 				</el-table>
@@ -93,7 +95,7 @@
 </template>
 
 <script>
-import { saveMeetOrder, checkLogin, getResidueSquare } from '@/service';
+import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
 
 export default {
 	name: 'MeetOrder',
@@ -107,14 +109,34 @@ export default {
 				company: '',
 				mobile: '',
 				email: '',
-				meetTime: '',
+				meetTime: null,
+				duration: null,
 				memberCnt: null,
 			},
 			rules: {
 				meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
+				duration: [{ required: true, message: '请输入会议时长', trigger: 'blur' }],
+				memberCnt: [{ required: true, message: '请选择参会方数', trigger: 'change' }],
 			},
 			orderList: [],
-			cntOpt: [],
+			cntOpt: [
+				{
+					labe: '2位',
+					value: 2,
+				},
+				{
+					labe: '3位',
+					value: 3,
+				},
+				{
+					labe: '4位',
+					value: 4,
+				},
+				{
+					labe: '5位',
+					value: 5
+				},
+			],
 		};
 	},
 
@@ -129,53 +151,27 @@ export default {
 			try {
 				const userInfo = await checkLogin();
 				if (userInfo) {
-					const { trueName, mobile, company } = userInfo;
+					const { trueName, mobile, company, eMail } = userInfo;
 					this.orderInfo.name = trueName;
-					console.log(company, trueName, mobile);
-					this.orderInfo.company = decodeURI(unescape(company));
-					// this.orderInfo.company = decodeURI(decodeURI(company))
+					this.orderInfo.company = company;
 					this.orderInfo.mobile = mobile;
+					this.orderInfo.email = eMail;
 
-					const { residueSquares } = await getResidueSquare();
-					for (let i = 2; i <= residueSquares; i++) {
-						this.cntOpt.push({
-							value: i,
-							label: `${i}位`,
-						});
-					}
+					this.queryMyOrder();
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
 					setTimeout(() => {
 						window.location.href = 'http://www.sstir.cn';
 					}, 1000);
 				}
-				// if (logFlag) {
-				// 	this.loginName = logName;
-
-				// 	const { userId, name, company, mobile, email } = await getUserInfoByLogName(logName);
-				// 	this.orderInfo = {
-				// 		userId,
-				// 		name,
-				// 		company,
-				// 		mobile,
-				// 		email,
-				// 		meet: this.orderInfo.meet,
-				// 	};
-
-				// 	const myOrder = await getMyOrder(userId);
-				// 	console.log(myOrder);
-				// 	if (myOrder) {
-				// 		this.orderList = myOrder;
-				// 	}
-				// } else {
-				// 	this.$message.error('请先登录SSTIR官网!');
-				// 	setTimeout(() => {
-				// 		window.location.href = 'http://www.sstir.cn';
-				// 	}, 1000);
-				// }
 			} catch (err) {
 				this.$message.error(err);
 			}
+		},
+
+		async queryMyOrder() {
+			const res = await queryMyOrderList();
+			this.orderList = res;
 		},
 
 		onSubmit() {
@@ -185,11 +181,18 @@ export default {
 						this.$message.error('为确保我们能够给您发送会议地址，请至少填写手机号码或者邮箱地址其中一项。');
 					} else {
 						try {
-							await saveMeetOrder(this.orderInfo);
+							const postData = {
+								startTime: this.orderInfo.meetTime,
+								maxMember: this.orderInfo.memberCnt,
+								duration: this.orderInfo.duration,
+							};
+							await saveMeetRoom(postData);
 							this.$message.success('预约成功!');
 							this.$refs.form.resetFields();
-							this.orderInfo.meet = null;
-							await this.initData();
+							this.orderInfo.meetTime = null;
+							this.orderInfo.duration = null;
+							this.orderInfo.memberCnt = null;
+							await this.queryMyOrder();
 							this.activeName = 'my';
 						} catch (err) {
 							this.$message.error(err);
