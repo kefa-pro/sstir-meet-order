@@ -96,6 +96,7 @@
 
 <script>
 import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
+import appConfig from '@/config'
 
 export default {
 	name: 'MeetOrder',
@@ -161,7 +162,7 @@ export default {
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
 					setTimeout(() => {
-						window.location.href = 'http://www.sstir.cn';
+						window.location.href = appConfig.homepageUrl;
 					}, 1000);
 				}
 			} catch (err) {

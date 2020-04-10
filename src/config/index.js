@@ -6,27 +6,32 @@ const getBaseUrl = env => {
     // development
     case "dev":
       return {
-        baseUrl: "http://172.16.70.122:30000//vedio/"
+        baseUrl: "http://172.16.70.122:30000/vedio/",
+        homepageUrl: "http://www.sstir.cn"
       };
     // production
     case "prod":
       return {
-        baseUrl: "http://172.16.70.122:30000//vedio/"
+        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com/vedio/",
+        homepageUrl: "http://www.sstir.cn"
       };
     case "qa":
       return {
-        baseUrl: "http://172.16.70.122:30000//vedio/"
+        baseUrl: "http://vedio-meeting-sstir-pre.apps.datadrivecloud.com/vedio/",
+        homepageUrl: "http://web-ui-sstir-pre.apps.datadrivecloud.com/"
       };
     // default: dev
     default:
       return {
-        baseUrl: "http://172.16.70.122:30000//vedio/"
+        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com/vedio/",
+        homepageUrl: "http://www.sstir.cn"
       };
   }
 };
 
 const appConfig = {
-  baseUrl: getBaseUrl(env).baseUrl
+  baseUrl: getBaseUrl(env).baseUrl,
+  homepageUrl: getBaseUrl(env).homepageUrl
 };
 
 export default appConfig;
