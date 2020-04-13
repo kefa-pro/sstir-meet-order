@@ -111,7 +111,7 @@ export default {
 				mobile: '',
 				email: '',
 				meetTime: null,
-				duration: null,
+				duration: 30,
 				memberCnt: null,
 			},
 			rules: {
