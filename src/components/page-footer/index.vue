@@ -9,9 +9,6 @@
         <p class="content">
           2. 请填写真实的个人信息，手机和邮箱至少填写一个，以便我们发送会议地址。
         </p>
-         <p class="content">
-          3. 灰色不可选择的时间段表示该时段会议室已约满，敬请谅解。
-        </p>
       </div>
       <div class="qrcode">
         <img :src="QrCode" />

@@ -53,7 +53,7 @@
 									:min="1"
 									style="width: 200px;"
 								></el-input-number
-								>(分钟)
+								>&nbsp;(分钟)
 							</el-form-item>
 							<el-form-item label="参会方数:" prop="memberCnt">
 								<el-select v-model="orderInfo.memberCnt" placeholder="请选择" style="width: 200px;">
@@ -91,12 +91,44 @@
 				</el-table>
 			</el-tab-pane>
 		</el-tabs>
+
+		<el-dialog title="您的预约信息如下，请确认：" :visible.sync="showConfirm" width="800px">
+			<div class="confirm-wrapper">
+				<el-form label-width="120px">
+					<el-form-item label="姓名:">
+						<span>{{ orderInfo.name }}</span>
+					</el-form-item>
+					<el-form-item label="单位:">
+						<span>{{ orderInfo.company }}</span>
+					</el-form-item>
+					<el-form-item label="手机:">
+						<span>{{ orderInfo.mobile }}</span>
+					</el-form-item>
+					<el-form-item label="邮箱:">
+						<span>{{ orderInfo.email }}</span>
+					</el-form-item>
+					<el-form-item label="会议开始时间:" prop="meetTime">
+						<span>{{ orderInfo.meetTime }}</span>
+					</el-form-item>
+					<el-form-item label="会议时长:" prop="duration">
+						<span>{{ orderInfo.duration }} (分钟)</span>
+					</el-form-item>
+					<el-form-item label="参会方数:" prop="memberCnt">
+						<span>{{ orderInfo.memberCnt }}方</span>
+					</el-form-item>
+				</el-form>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showConfirm = false">取 消</el-button>
+				<el-button type="primary" @click="onConfirmSave">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
 </template>
 
 <script>
 import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
-import appConfig from '@/config'
+// import appConfig from '@/config';
 
 export default {
 	name: 'MeetOrder',
@@ -112,32 +144,33 @@ export default {
 				email: '',
 				meetTime: null,
 				duration: 30,
-				memberCnt: null,
+				memberCnt: null
 			},
 			rules: {
 				meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
 				duration: [{ required: true, message: '请输入会议时长', trigger: 'blur' }],
-				memberCnt: [{ required: true, message: '请选择参会方数', trigger: 'change' }],
+				memberCnt: [{ required: true, message: '请选择参会方数', trigger: 'change' }]
 			},
 			orderList: [],
 			cntOpt: [
 				{
 					labe: '2位',
-					value: 2,
+					value: 2
 				},
 				{
 					labe: '3位',
-					value: 3,
+					value: 3
 				},
 				{
 					labe: '4位',
-					value: 4,
+					value: 4
 				},
 				{
 					labe: '5位',
 					value: 5
-				},
+				}
 			],
+			showConfirm: false
 		};
 	},
 
@@ -161,9 +194,9 @@ export default {
 					this.queryMyOrder();
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
-					setTimeout(() => {
-						window.location.href = appConfig.homepageUrl;
-					}, 1000);
+					// setTimeout(() => {
+					// 	window.location.href = appConfig.homepageUrl;
+					// }, 1000);
 				}
 			} catch (err) {
 				this.$message.error(err);
@@ -176,31 +209,41 @@ export default {
 		},
 
 		onSubmit() {
-			this.$refs.form.validate(async valid => {
+			this.$refs.form.validate(valid => {
 				if (valid) {
 					if (!this.orderInfo.mobile.trim() && !this.orderInfo.email.trim()) {
 						this.$message.error('为确保我们能够给您发送会议地址，请至少填写手机号码或者邮箱地址其中一项。');
 					} else {
-						try {
-							const postData = {
-								startTime: this.orderInfo.meetTime,
-								maxMember: this.orderInfo.memberCnt,
-								duration: this.orderInfo.duration,
-							};
-							await saveMeetRoom(postData);
-							this.$message.success('预约成功!');
-							this.$refs.form.resetFields();
-							this.orderInfo.meetTime = null;
-							this.orderInfo.duration = null;
-							this.orderInfo.memberCnt = null;
-							await this.queryMyOrder();
-							this.activeName = 'my';
-						} catch (err) {
-							this.$message.error(err);
-						}
+						this.showConfirm = true;
 					}
 				}
 			});
+		},
+
+		async handleSubmit() {
+			try {
+				const postData = {
+					startTime: this.orderInfo.meetTime,
+					maxMember: this.orderInfo.memberCnt,
+					duration: this.orderInfo.duration
+				};
+				await saveMeetRoom(postData);
+				this.$message.success('预约成功!');
+				this.$refs.form.resetFields();
+				this.orderInfo.meetTime = null;
+				this.orderInfo.duration = null;
+				this.orderInfo.memberCnt = null;
+				await this.queryMyOrder();
+				this.activeName = 'my';
+			} catch (err) {
+				this.$message.error(err || '创建失败，请重试!');
+			}
+		},
+
+		handleConfirmClose() {},
+
+		onConfirmSave() {
+			this.handleSubmit()
 		},
 
 		getTime(val) {
@@ -208,8 +251,8 @@ export default {
 			return `${time.getFullYear()}-${(time.getMonth() + 1 + '').padStart(2, '0')}-${(
 				time.getDate() + ''
 			).padStart(2, '0')}`;
-		},
-	},
+		}
+	}
 };
 </script>
 
@@ -249,6 +292,12 @@ export default {
 			padding-top: 15px;
 			font-size: 14px;
 			line-height: 24px;
+		}
+	}
+
+	.confirm-wrapper {
+		/deep/ .el-form-item {
+			margin-bottom: 0 !important;
 		}
 	}
 }
