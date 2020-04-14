@@ -237,11 +237,11 @@ export default {
 				};
 				await saveMeetRoom(postData);
 				this.$message.success('预约成功!');
+				await this.queryMyOrder();
 				this.$refs.form.resetFields();
 				this.orderInfo.meetTime = null;
 				this.orderInfo.duration = null;
 				this.orderInfo.memberCnt = null;
-				await this.queryMyOrder();
 				this.activeName = 'my';
 			} catch (err) {
 				this.$message.error(err || '创建失败，请重试!');
