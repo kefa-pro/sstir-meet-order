@@ -242,6 +242,7 @@ export default {
 				this.orderInfo.meetTime = null;
 				this.orderInfo.duration = null;
 				this.orderInfo.memberCnt = null;
+				this.showConfirm = false
 				this.activeName = 'my';
 			} catch (err) {
 				this.$message.error(err || '创建失败，请重试!');
