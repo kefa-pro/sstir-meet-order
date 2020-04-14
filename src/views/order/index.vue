@@ -51,6 +51,7 @@
 									v-model="orderInfo.duration"
 									controls-position="right"
 									:min="1"
+									:max="480"
 									style="width: 200px;"
 								></el-input-number
 								>&nbsp;(分钟)
