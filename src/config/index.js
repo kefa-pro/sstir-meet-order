@@ -18,7 +18,7 @@ const getBaseUrl = env => {
     case "qa":
       return {
         baseUrl: "http://vedio-meeting-sstir-pre.apps.datadrivecloud.com/vedio/",
-        homepageUrl: "http://10.10.11.165:8222/cas/login?service=http://vedio1-sstir-pre.apps.datadrivecloud.com/#/"
+        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://vedio1-sstir-pre.apps.datadrivecloud.com/#/"
       };
     // default: dev
     default:
