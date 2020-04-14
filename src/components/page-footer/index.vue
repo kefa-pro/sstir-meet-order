@@ -9,6 +9,9 @@
         <p class="content">
           2. 请填写真实的个人信息，手机和邮箱至少填写一个，以便我们发送会议地址。
         </p>
+         <p class="content">
+          3. 因资源有限，部分时段可能会因为已经被约满导致无法预约，敬请谅解。
+        </p>
       </div>
       <div class="qrcode">
         <img :src="QrCode" />

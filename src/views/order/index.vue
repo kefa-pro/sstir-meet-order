@@ -200,7 +200,10 @@ export default {
 					}, 1000);
 				}
 			} catch (err) {
-				this.$message.error(err);
+				this.$message.error(err.toString());
+				setTimeout(() => {
+						window.location.href = appConfig.homepageUrl;
+					}, 1000);
 			}
 		},
 
