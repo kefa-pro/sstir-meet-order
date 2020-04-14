@@ -129,7 +129,7 @@
 
 <script>
 import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
-// import appConfig from '@/config';
+import appConfig from '@/config';
 
 export default {
 	name: 'MeetOrder',
@@ -195,9 +195,9 @@ export default {
 					this.queryMyOrder();
 				} else {
 					this.$message.error('请先登录SSTIR官网!');
-					// setTimeout(() => {
-					// 	window.location.href = appConfig.homepageUrl;
-					// }, 1000);
+					setTimeout(() => {
+						window.location.href = appConfig.homepageUrl;
+					}, 1000);
 				}
 			} catch (err) {
 				this.$message.error(err);
@@ -226,7 +226,11 @@ export default {
 				const postData = {
 					startTime: this.orderInfo.meetTime,
 					maxMember: this.orderInfo.memberCnt,
-					duration: this.orderInfo.duration
+					duration: this.orderInfo.duration,
+					pUserName: this.orderInfo.name,
+					company: this.orderInfo.company,
+					mobile: this.orderInfo.mobile,
+					email: this.orderInfo.email
 				};
 				await saveMeetRoom(postData);
 				this.$message.success('预约成功!');
