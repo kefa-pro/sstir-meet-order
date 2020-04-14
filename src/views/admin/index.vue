@@ -76,7 +76,7 @@
 			</span>
 		</el-dialog> -->
 		<el-table :data="tblOrderData">
-			<el-table-column prop="puserName" label="姓名" fixed />
+			<el-table-column prop="pUserName" label="姓名" fixed />
 			<el-table-column prop="company" label="单位" width="180" />
 			<el-table-column prop="mobile" label="电话" width="120" />
 			<el-table-column prop="email" label="邮箱" width="180" />
