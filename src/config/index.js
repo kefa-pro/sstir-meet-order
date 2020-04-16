@@ -12,8 +12,8 @@ const getBaseUrl = env => {
     // production
     case "prod":
       return {
-        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com/vedio/",
-        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://vedio.sstir.cn"
+        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com",
+        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://meet3.cloud.sstir.cn"
       };
     case "qa":
       return {
@@ -23,8 +23,8 @@ const getBaseUrl = env => {
     // default: dev
     default:
       return {
-        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com/vedio/",
-        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://vedio.sstir.cn"
+        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com",
+        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://meet3.cloud.sstir.cn"
       };
   }
 };
