@@ -12,7 +12,7 @@ const getBaseUrl = env => {
     // production
     case "prod":
       return {
-        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com/vedio/",
+        baseUrl: "http://apigate.sstir.cn/vedio/",
         homepageUrl: "http://cas.sstir.cn/cas/login?service=http://meet3.cloud.sstir.cn"
       };
     case "qa":
@@ -23,7 +23,7 @@ const getBaseUrl = env => {
     // default: dev
     default:
       return {
-        baseUrl: "http://vedio-meeting-sstir.apps.datadrivecloud.com",
+        baseUrl: "http://apigate.sstir.cn/vedio/",
         homepageUrl: "http://cas.sstir.cn/cas/login?service=http://meet3.cloud.sstir.cn"
       };
   }
