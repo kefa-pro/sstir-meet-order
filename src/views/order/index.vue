@@ -130,13 +130,14 @@
 <script>
 import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
 import appConfig from '@/config';
-
+import { setToken } from '@/utils/auth'
 export default {
 	name: 'MeetOrder',
 
 	data() {
 		return {
 			activeName: 'order',
+			token: this.$route.query.token,
 			loginName: '',
 			orderInfo: {
 				name: '',
@@ -184,6 +185,9 @@ export default {
 	methods: {
 		async initData() {
 			try {
+				if (this.token) {
+					setToken(this.token)
+				}
 				const userInfo = await checkLogin();
 				if (userInfo) {
 					const { trueName, mobile, company, eMail } = userInfo;
