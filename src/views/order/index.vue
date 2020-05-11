@@ -187,7 +187,7 @@ export default {
 			try {
 				if (this.token) {
 					setToken(this.token);
-					this.$router.push('/order')
+					this.$router.push('/')
 				}
 				const userInfo = await checkLogin();
 				if (userInfo) {
