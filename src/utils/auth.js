@@ -12,6 +12,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
+  console.log(token, domain)
 	return Cookies.set(TokenKey, token, { domain });
 }
 

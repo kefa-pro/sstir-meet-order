@@ -130,7 +130,7 @@
 <script>
 import { saveMeetRoom, checkLogin, queryMyOrderList } from '@/service';
 import appConfig from '@/config';
-import { setToken } from '@/utils/auth'
+import { setToken } from '@/utils/auth';
 export default {
 	name: 'MeetOrder',
 
@@ -146,33 +146,33 @@ export default {
 				email: '',
 				meetTime: null,
 				duration: 30,
-				memberCnt: null
+				memberCnt: null,
 			},
 			rules: {
 				meetTime: [{ required: true, message: '请选择会议时间', trigger: 'change' }],
 				duration: [{ required: true, message: '请输入会议时长', trigger: 'blur' }],
-				memberCnt: [{ required: true, message: '请选择参会方数', trigger: 'change' }]
+				memberCnt: [{ required: true, message: '请选择参会方数', trigger: 'change' }],
 			},
 			orderList: [],
 			cntOpt: [
 				{
 					labe: '2位',
-					value: 2
+					value: 2,
 				},
 				{
 					labe: '3位',
-					value: 3
+					value: 3,
 				},
 				{
 					labe: '4位',
-					value: 4
+					value: 4,
 				},
 				{
 					labe: '5位',
-					value: 5
-				}
+					value: 5,
+				},
 			],
-			showConfirm: false
+			showConfirm: false,
 		};
 	},
 
@@ -186,7 +186,8 @@ export default {
 		async initData() {
 			try {
 				if (this.token) {
-					setToken(this.token)
+					setToken(this.token);
+					this.$router.push('/order')
 				}
 				const userInfo = await checkLogin();
 				if (userInfo) {
@@ -206,8 +207,8 @@ export default {
 			} catch (err) {
 				this.$message.error(err.toString());
 				setTimeout(() => {
-						window.location.href = appConfig.homepageUrl;
-					}, 1000);
+					window.location.href = appConfig.homepageUrl;
+				}, 1000);
 			}
 		},
 
@@ -217,7 +218,7 @@ export default {
 		},
 
 		onSubmit() {
-			this.$refs.form.validate(valid => {
+			this.$refs.form.validate((valid) => {
 				if (valid) {
 					if (!this.orderInfo.mobile.trim() && !this.orderInfo.email.trim()) {
 						this.$message.error('为确保我们能够给您发送会议地址，请至少填写手机号码或者邮箱地址其中一项。');
@@ -237,7 +238,7 @@ export default {
 					pUserName: this.orderInfo.name,
 					company: this.orderInfo.company,
 					mobile: this.orderInfo.mobile,
-					email: this.orderInfo.email
+					email: this.orderInfo.email,
 				};
 				await saveMeetRoom(postData);
 				this.$message.success('预约成功!');
@@ -246,7 +247,7 @@ export default {
 				this.orderInfo.meetTime = null;
 				this.orderInfo.duration = null;
 				this.orderInfo.memberCnt = null;
-				this.showConfirm = false
+				this.showConfirm = false;
 				this.activeName = 'my';
 			} catch (err) {
 				this.$message.error(err || '创建失败，请重试!');
@@ -256,7 +257,7 @@ export default {
 		handleConfirmClose() {},
 
 		onConfirmSave() {
-			this.handleSubmit()
+			this.handleSubmit();
 		},
 
 		getTime(val) {
@@ -264,8 +265,8 @@ export default {
 			return `${time.getFullYear()}-${(time.getMonth() + 1 + '').padStart(2, '0')}-${(
 				time.getDate() + ''
 			).padStart(2, '0')}`;
-		}
-	}
+		},
+	},
 };
 </script>
 
