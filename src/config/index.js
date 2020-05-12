@@ -14,7 +14,7 @@ const getBaseUrl = env => {
     case "prod":
       return {
         baseUrl: "http://meet3.cloud.sstir.cn/vedio/",
-        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://meet3.cloud.sstir.cn/basic/cas/login/meeting",
+        homepageUrl: "http://cas.sstir.cn/cas/login?service=http://apigate.sstir.cn/basic/cas/login/meeting",
         domain: '.sstir.cn'
       };
     case "qa":
